@@ -12,7 +12,4 @@ class Reader(Base):
 
     email: Mapped[str] = mapped_column(String, unique=True, nullable=False)
 
-
-    
-
     books: Mapped[list["Book"]] = relationship(back_populates="reader")
