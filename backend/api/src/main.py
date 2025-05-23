@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
-from src.database.db import init_db
+from database.db import init_db
+from books_library import models
 import logging
 import uvicorn
 

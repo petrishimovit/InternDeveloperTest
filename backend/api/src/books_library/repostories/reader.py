@@ -51,7 +51,7 @@ class ReaderRepository:
         if not reader:
             raise ValueError("Reader not found")
 
-        # Получаем количество книг у читателя
+        
         books = await self.book_repo.get_books_by_owner(reader_id)
         if len(books) >= 3:
             raise ValueError("Reader cannot have more than 3 books")

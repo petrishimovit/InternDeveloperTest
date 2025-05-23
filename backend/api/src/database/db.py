@@ -1,7 +1,6 @@
-from hikvision_cameras.models import *
 from sqlalchemy.ext.asyncio import create_async_engine , async_sessionmaker
 from database.base import Base
-from src.config import config
+from config import config
 
 
 
