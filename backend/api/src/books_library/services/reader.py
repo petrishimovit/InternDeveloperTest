@@ -1,9 +1,9 @@
 from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import HTTPException
-from repositories import (ReaderRepository , BookRepository)
-from schemas.reader import ReaderCreate, ReaderUpdate
-from models.reader import Reader
+from books_library.repositories import (ReaderRepository , BookRepository)
+from books_library.schemas.reader import ReaderCreate, ReaderUpdate
+from books_library.models.reader import Reader
 
 
 class ReaderService:

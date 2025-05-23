@@ -1,24 +1,30 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from models import Reader, Book
-from schemas.reader import ReaderCreate, ReaderUpdate
 from typing import List, Optional
+from books_library.models import Reader
+from books_library.schemas.reader import ReaderCreate, ReaderUpdate
 
 
 class ReaderRepository:
 
     def __init__(self, session: AsyncSession):
+
         self.session = session
 
     async def get_all(self) -> List[Reader]:
+
         result = await self.session.execute(select(Reader))
+
         return result.scalars().all()
 
     async def get_by_id(self, reader_id: int) -> Optional[Reader]:
+
         result = await self.session.execute(select(Reader).where(Reader.id == reader_id))
+
         return result.scalar_one_or_none()
 
     async def create(self, reader_data: ReaderCreate) -> Reader:
+        
         reader = Reader(**reader_data.model_dump())
         self.session.add(reader)
         await self.session.commit()
@@ -37,40 +43,8 @@ class ReaderRepository:
 
     async def delete(self, reader_id: int) -> bool:
         reader = await self.get_by_id(reader_id)
-
         if not reader:
             return False
-        
         await self.session.delete(reader)
-
-        await self.session.commit()
-        return True
-    
-    async def give_book_to_reader(self, reader_id: int, book_id: int) -> bool:
-        reader = await self.reader_repo.get_by_id(reader_id)
-        if not reader:
-            raise ValueError("Reader not found")
-
-        
-        books = await self.book_repo.get_books_by_owner(reader_id)
-        if len(books) >= 3:
-            raise ValueError("Reader cannot have more than 3 books")
-
-        book = await self.book_repo.get_by_id(book_id)
-        if not book:
-            raise ValueError("Book not found")
-        if book.owner_id is not None:
-            raise ValueError("Book already assigned")
-
-        return await self.reader_repo.give_book_to_reader(reader_id, book_id)
-
-    async def take_book_from_reader(self, book_id: int) -> bool:
-        result = await self.session.execute(select(Book).where(Book.id == book_id))
-        book = result.scalar_one_or_none()
-        if not book or book.owner_id is None:
-            return False  
-
-       
-        book.owner_id = None
         await self.session.commit()
         return True

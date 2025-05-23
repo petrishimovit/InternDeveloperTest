@@ -9,10 +9,15 @@ class BookCreate(BaseModel):
     copies: int = Field(default=1, ge=0)
 
 class BookUpdate(BaseModel):
+
     name: Optional[str]
+
     author: Optional[str]
+
     publication_year: Optional[int]
+
     isbn: Optional[str]
+    
     copies: Optional[int] = Field(default=None, ge=0)
 
 class BookRead(BaseModel):

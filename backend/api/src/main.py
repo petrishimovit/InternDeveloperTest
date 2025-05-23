@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from database.db import init_db
 from books_library import models
+from routes import router
 import logging
 import uvicorn
 
@@ -20,6 +21,8 @@ async def lifespan(app: FastAPI):
     
 
 app = FastAPI(lifespan=lifespan)
+
+app.include_router(router)
 
 
 if __name__ == "__main__":

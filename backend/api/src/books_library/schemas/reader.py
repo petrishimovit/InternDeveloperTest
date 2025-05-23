@@ -1,18 +1,18 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel 
 from typing import Optional
 
 class ReaderCreate(BaseModel):
     name: str
-    email: EmailStr
+    email: str
 
 class ReaderUpdate(BaseModel):
     name: Optional[str]
-    email: Optional[EmailStr]
+    email: Optional[str]
 
 class ReaderRead(BaseModel):
     id: int
     name: str
-    email: EmailStr
+    email: str
 
     class Config:
         orm_mode = True
