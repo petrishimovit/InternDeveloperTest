@@ -27,16 +27,23 @@ class BookService:
             raise ValueError("Читателю уже выдано 3 книги")
 
         book.reader_id = reader_id
+
         await self.session.commit()
+
         await self.session.refresh(book)
+
         return book
 
     async def return_from_reader(self, book_id: int) -> Book:
+
         book = await self.repo.get_by_id(book_id)
+
         if not book:
             raise ValueError("Книга не найдена")
+        
         if book.reader_id is None:
             raise ValueError("Книга не привязана к читателю")
+        
 
         book.reader_id = None
         await self.session.commit()
