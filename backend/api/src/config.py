@@ -19,6 +19,8 @@ class Config(BaseSettings):
 
     DB_PASSWORD: str 
 
+    JWT_SECRET_KEY : str
+
     class Config:
        env_file = f"{BASE_DIR}/.env"
 
