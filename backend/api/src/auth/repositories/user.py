@@ -1,4 +1,5 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
 from auth.models.user import User
 from auth.schemas.user import UserCreate
 from passlib.context import CryptContext
@@ -6,22 +7,17 @@ from passlib.context import CryptContext
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 class UserRepository:
-    
-    def __init__(self, db: Session):
+    def __init__(self, db: AsyncSession):
         self.db = db
 
-    def get_user_by_email(self, email: str) -> User | None:
-        return self.db.query(User).filter(User.email == email).first()
+    async def get_user_by_email(self, email: str) -> User | None:
+        result = await self.db.execute(select(User).filter(User.email == email))
+        return result.scalars().first()
 
-    def create_user(self, user: UserCreate) -> User:
-
+    async def create_user(self, user: UserCreate) -> User:
         hashed_password = pwd_context.hash(user.password)
-
         db_user = User(email=user.email, password=hashed_password)
-
         self.db.add(db_user)
-
-        self.db.commit()
-
-        self.db.refresh(db_user)
+        await self.db.commit()
+        await self.db.refresh(db_user)
         return db_user

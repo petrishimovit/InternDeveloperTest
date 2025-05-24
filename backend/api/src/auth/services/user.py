@@ -1,34 +1,25 @@
-# auth/services/user.py
-from sqlalchemy.orm import Session
-from auth.repositories import UserRepository
-from auth.schemas.user import UserCreate, UserOut
-from auth.config import authx
-from passlib.context import CryptContext
+from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import HTTPException
+from auth.repositories.user import UserRepository
+from auth.schemas.user import UserCreate, UserOut
+from auth.config.config import authx_cfg
+from passlib.context import CryptContext
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 class UserService:
-
-    def __init__(self, db: Session):
-
+    def __init__(self, db: AsyncSession):
         self.user_repo = UserRepository(db)
 
-    def register(self, user: UserCreate) -> UserOut:
-
-        if self.user_repo.get_user_by_email(user.email):
-
+    async def register(self, user: UserCreate) -> UserOut:
+        if await self.user_repo.get_user_by_email(user.email):
             raise HTTPException(400, detail="Email already registered")
-        
-        return self.user_repo.create_user(user)
+        return await self.user_repo.create_user(user)
 
-    def login(self, email: str, password: str) -> dict:
-
-        db_user = self.user_repo.get_user_by_email(email)
-
+    async def login(self, email: str, password: str) -> dict:
+        db_user = await self.user_repo.get_user_by_email(email)
         if not db_user or not pwd_context.verify(password, db_user.password):
-
             raise HTTPException(401, detail="Invalid credentials")
-        
-        token = authx.create_access_token(uid=email)
+        token = authx_cfg.create_access_token(uid=email)  # Используй authx_cfg
+        print(f"Generated token: {token}")  # Отладка
         return {"access_token": token, "token_type": "bearer"}
