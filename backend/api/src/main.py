@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 async def lifespan(app: FastAPI):
     
     logger.info("Starting database initialization")
-    # await delete_db()
+    await delete_db()
     await init_db()
     logger.info("Database initialization completed")
     yield

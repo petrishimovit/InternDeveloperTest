@@ -1,4 +1,3 @@
-# tests/test_books.py
 import pytest
 from httpx import AsyncClient
 from fastapi import status
@@ -9,7 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 @pytest.mark.asyncio
 async def test_create_book(async_client: AsyncClient, db_session: AsyncSession):
-    # Логин
+    
     user_data = UserCreate(email="test@example.com", password="password")
     user_service = UserService(db_session)
     await user_service.register(user_data)
@@ -19,7 +18,7 @@ async def test_create_book(async_client: AsyncClient, db_session: AsyncSession):
     )
     cookies = login_response.cookies
 
-    # Создание книги
+    
     book_data = BookCreate(title="Test Book", author="Author", year=2023)
     response = await async_client.post(
         "/books/",

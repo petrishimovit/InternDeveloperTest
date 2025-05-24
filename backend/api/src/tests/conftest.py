@@ -7,13 +7,13 @@ from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 import importlib.util
 
-# Корректируем sys.path для импорта из src/
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # src/tests/
-SRC_DIR = os.path.dirname(BASE_DIR)  # src/
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))  
+SRC_DIR = os.path.dirname(BASE_DIR)  
 if SRC_DIR not in sys.path:
     sys.path.insert(0, SRC_DIR)
 
-# Явный импорт main.py
+
 spec = importlib.util.spec_from_file_location("main", os.path.join(SRC_DIR, "main.py"))
 main = importlib.util.module_from_spec(spec)
 sys.modules["main"] = main
@@ -24,7 +24,7 @@ from auth.models.user import User
 from books_library.models.book import Book
 from books_library.models.reader import Reader
 
-app = main.app  # Доступ к атрибуту app
+app = main.app  
 
 @pytest.fixture(scope="session")
 async def init_db():

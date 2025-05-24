@@ -1,13 +1,38 @@
-version: '2'
 services:
-    db:
-        image: postgres:13
-        volumes:
-            - ./db:/var/lib/postgresql/data/pgdata
-        ports:
-            - 5428:5432
-        environment:
-            - POSTGRES_USER=user
-            - POSTGRES_DB=database
-            - POSTGRES_PASSWORD=12345
-            - PGDATA=/var/lib/postgresql/data/pgdata
+  db:
+    image: postgres:13
+    volumes:
+      - ./backend/postgres/db:/var/lib/postgresql/data/pgdata
+    
+    ports:
+      - "5428:5432"
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_DB=database
+      - POSTGRES_PASSWORD=12345
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d database"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+
+  backend:
+    build:
+      context: ./backend/api
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./backend/api:/app
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

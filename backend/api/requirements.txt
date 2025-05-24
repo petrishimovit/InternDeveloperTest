@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+sqlalchemy
+httpx
+jinja2
+python-dotenv
+pydantic
+pydantic-settings
+asyncpg
+authx
+pydantic[email]
+passlib
+psycopg2-binary
