@@ -7,10 +7,6 @@ RESTful API для управления книгами, читателями и 
 git clone <репозиторий>
 cd <папка проекта>
 
-    Создайте .env файл с настройками (пример в .env.example).
-
-    Запустите всё через Docker Compose:
-
 docker compose up --build
 
     Приложение будет доступно по адресу: http://localhost:8000
